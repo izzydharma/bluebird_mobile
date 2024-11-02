@@ -37,6 +37,7 @@ The setState() method is used within a StatefulWidget to notify the framework th
 ### Step by step implementation
 
 **1. Create a new Flutter application with the E-Commerce theme that matches the previous assignments.**
+
 Create the new flutter app by running ```flutter create bluebird_mobile``` 
 
 Open lib/main.dart and set the MyApp class to match the last assignment's theme :
@@ -67,7 +68,7 @@ import 'package:flutter/material.dart';
 import 'package:bluebird_mobile/menu.dart'; // Import your menu.dart file
 ```
 
-2. Create three simple buttons with icons and texts
+**2. Create three simple buttons with icons and texts**
 
 in the ```lib``` directory make a new file called menu.dart add a new class called MyHomePage with this
 
@@ -94,7 +95,7 @@ GridView.count(
   }).toList(),
 )
 ```
-3. Give each buttons diffrent color
+**3. Give each buttons diffrent color**
 
 Crate a new class called ```ItemHomePage```, Add a constructor to initialize these properties:
 
@@ -108,7 +109,7 @@ class ItemHomepage {
 }
 ```
 
-4. Display a Snackbar with  messages:
+**4. Display a Snackbar with  messages:**
 
 Crate the ```ItemCard``` class to show the Snackbar with the messages
 
