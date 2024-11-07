@@ -164,7 +164,295 @@ class ItemCard extends StatelessWidget {
 }
 ```
 
+# bluebird_mobile
+
+## ASSIGNMENT 8
+
+### Step by step implementation
+
+#### Creating the form
+
+make a new file in the lib directory called ```add_item_form.dart```, with this codes
+
+```
+import 'package:flutter/material.dart';
+
+class AddItemForm extends StatefulWidget {
+  @override
+  _AddItemFormState createState() => _AddItemFormState();
+}
+
+class _AddItemFormState extends State<AddItemForm> {
+  final _formKey = GlobalKey<FormState>();
+  String name = '';
+  double amount = 0.0;
+  String description = '';
+
+  void _saveForm() {
+    if (_formKey.currentState?.validate() ?? false) {
+      _formKey.currentState?.save();
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Form Data'),
+          content: Text('Name: $name\nAmount: $amount\nDescription: $description'),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(ctx).pop(), child: Text('OK')),
+          ],
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Add Item')),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Name'),
+                onSaved: (value) => name = value ?? '',
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Please enter a name';
+                  if (value.length < 3) return 'Name must be at least 3 characters';
+                  if (value.length > 50) return 'Name cannot exceed 50 characters';
+                  return null;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Amount'),
+                keyboardType: TextInputType.number,
+                onSaved: (value) => amount = double.tryParse(value ?? '0') ?? 0.0,
+                validator: (value) {
+                  final parsed = double.tryParse(value ?? '');
+                  if (parsed == null) return 'Please enter a valid number';
+                  if (parsed < 0) return 'Amount cannot be negative';
+                  return null;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(labelText: 'Description'),
+                maxLines: 3,
+                onSaved: (value) => description = value ?? '',
+                validator: (value) {
+                  if (value == null || value.isEmpty) return 'Please enter a description';
+                  if (value.length < 5) return 'Description must be at least 5 characters';
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(onPressed: _saveForm, child: Text('Save')),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+#### Redirect the user to the new item addition form when they press the Add Item button on the main page.
+
+On the ItemCard widget in the ```menu.dart``` add this code after the ontap method
+
+```
+        onTap: () {
+          if (item.name == "Add Product") {
+            // Navigate to AddItemForm when "Add Product" is tapped
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (ctx) => AddItemForm()),
+            );
+          }
+```
+
+####  Display the data from the form in a pop-up after pressing the Save button on the new item addition form page.
+
+in the ```add_item_form.dart``` add this code snippet in the ```_AddItemFormState``` class 
+
+```
+  void _saveForm() {
+    if (_formKey.currentState?.validate() ?? false) {
+      _formKey.currentState?.save();
+      showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text('Form Data'),
+          content: Text('Name: $name\nAmount: $amount\nDescription: $description'),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(ctx).pop(), child: Text('OK')),
+          ],
+        ),
+```
+
+#### Create a drawer in the application 
+
+Create a new folder called ```widget``` in the lib directory, then make a new file called ```drawer_widget.daty``` and add these following code
+
+```
+import 'package:flutter/material.dart';
+import 'package:bluebird_mobile/add_item_form.dart';
+
+class DrawerWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          DrawerHeader(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Text(
+              'Menu',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+              ),
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Home'),
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed('/home');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.add),
+            title: Text('Add Item'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => AddItemForm()),
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+### 1. Purpose of const in Flutter
+
+The const keyword in Flutter is used to define compile-time constants. This means that the value or object that is marked as const is determined during the compilation, not at runtime. Using const allows Flutter to optimize widget trees by reusing widget instances rather than creating new ones every time the widget is built.
+
+Advantages of using const in Flutter:
+
+- Performance Optimization: When you use const, Flutter reuses the widget instead of recreating it every time the widget tree is rebuilt. This can improve performance by reducing unnecessary widget instantiations.
+- Memory Efficiency: const widgets are stored in the memory pool, meaning they are only created once, leading to lower memory usage.
+- Compile-time Evaluation: Using const enables the Flutter framework to evaluate values at compile-time, which can help catch errors earlier and reduce runtime overhead.
+  
+When to use const:
+
+- When the widget or value is known at compile time and will not change.
+- For static, non-changing content like icons, images, and text.
+
+### 2. Usage of Column and Row in Flutter
+
+- Column: The Column widget is a layout widget that arranges its children vertically. It takes a list of widgets and places them one after the other, vertically. You can customize its alignment, spacing, and behavior when there is limited space.
+
+- Row: The Row widget arranges its children horizontally. Like Column, it takes a list of widgets but arranges them from left to right.
+
+Example of Column:
+
+```
+dart
+Copy code
+Column(
+  children: [
+    Text('First Item'),
+    Text('Second Item'),
+    RaisedButton(onPressed: () {}, child: Text('Click Me')),
+  ],
+)
+```
+
+Example of Row:
+
+```
+dart
+Copy code
+Row(
+  children: [
+    Icon(Icons.home),
+    Text('Home'),
+    Icon(Icons.search),
+  ],
+)
+```
+
+### 3. Input Elements Used on the Form Page
+
+In my AddItemForm page, the following input elements are used:
+
+  1. TextFormField for Name:
+
+  - It accepts text input, with validation to ensure it's at least 3 characters long, does not exceed 50 characters, and is not empty.
+
+  2. TextFormField for Amount:
+
+  - It accepts numeric input with the keyboardType: TextInputType.number to prompt the numeric keyboard. Validation ensures the value is a valid number and is not negative.
+
+  3. TextFormField for Description:
+
+  - It accepts multi-line text with maxLines: 3, with validation to ensure it's at least 5 characters long and is not empty.
 
 
+Other Flutter Input Elements You Didn’t Use:
 
+- Checkbox: Used for binary choices (true/false).
+- Radio: Allows a set of mutually exclusive options.
+- Switch: Toggles between two states (on/off).
+- DatePicker / TimePicker: Allows the user to pick a date or time from a calendar or clock interface.
+- DropdownButton: For selecting from a list of options.
+- These elements could be useful for other form fields if your application requires binary or multiple choice options.
+
+### 4. Setting the Theme in Flutter
+
+To ensure consistency in a Flutter app, themes are used to define colors, font styles, button styles, etc. The theme is set globally through the ThemeData object in the MaterialApp widget. 
+
+Here is my theme
+
+```
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+         colorScheme: ColorScheme.fromSwatch(
+       primarySwatch: Colors.lightBlue,
+ ).copyWith(secondary: Colors.lightBlueAccent[400]),
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+```
+
+### 5. Managing Navigation in a Multi-Page Flutter Application
+
+In Flutter, navigation between pages is managed using the Navigator widget. The Navigator.push method is used to navigate to a new page, while Navigator.pop is used to go back to the previous page.
+
+this is an example from my app
+
+```
+  onTap: () {
+          if (item.name == "Add Product") {
+            // Navigate to AddItemForm when "Add Product" is tapped
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (ctx) => AddItemForm()),
+            );
+          }
+```
 
