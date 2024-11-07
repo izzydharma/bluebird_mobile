@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:bluebird_mobile/widget/drawer_widget.dart';
+import 'add_item_form.dart'; 
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
   
   final List<ItemHomepage> items = [
     ItemHomepage("View Product", Icons.mood, Colors.blue), 
-    ItemHomepage("Add Mood", Icons.add, Colors.green), 
+    ItemHomepage("Add Product", Icons.add, Colors.green), 
     ItemHomepage("Logout", Icons.logout, Colors.red), 
   ];
 
@@ -22,6 +24,7 @@ class MyHomePage extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
+      drawer: DrawerWidget(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -41,7 +44,6 @@ class MyHomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  // Grid to display ItemCard in a 3 column grid.
                   GridView.count(
                     primary: true,
                     padding: const EdgeInsets.all(20),
@@ -63,18 +65,20 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
+
+
 class ItemHomepage {
   final String name;
   final IconData icon;
-  final Color color; 
+  final Color color;
 
-  ItemHomepage(this.name, this.icon, this.color); 
+  ItemHomepage(this.name, this.icon, this.color);
 }
 
 class ItemCard extends StatelessWidget {
-  final ItemHomepage item; 
-  
-  const ItemCard(this.item, {super.key}); 
+  final ItemHomepage item;
+
+  const ItemCard(this.item, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -83,11 +87,18 @@ class ItemCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: () {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              SnackBar(content: Text("You have pressed the ${item.name} button!"))
+          if (item.name == "Add Product") {
+            // Navigate to AddItemForm when "Add Product" is tapped
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (ctx) => AddItemForm()),
             );
+          } else {
+            // Show a snackbar for other items
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(SnackBar(
+                  content: Text("You have pressed the ${item.name} button!")));
+          }
         },
         child: Container(
           padding: const EdgeInsets.all(8),
