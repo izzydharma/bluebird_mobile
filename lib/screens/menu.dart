@@ -1,6 +1,6 @@
+import 'package:bluebird_mobile/widgets/product_card.dart';
 import 'package:flutter/material.dart';
-import 'package:bluebird_mobile/widget/drawer_widget.dart';
-import 'add_item_form.dart'; 
+import 'package:bluebird_mobile/widgets/left_drawer.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
@@ -24,7 +24,7 @@ class MyHomePage extends StatelessWidget {
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
       ),
-      drawer: DrawerWidget(),
+      drawer: const LeftDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -67,61 +67,3 @@ class MyHomePage extends StatelessWidget {
 
 
 
-class ItemHomepage {
-  final String name;
-  final IconData icon;
-  final Color color;
-
-  ItemHomepage(this.name, this.icon, this.color);
-}
-
-class ItemCard extends StatelessWidget {
-  final ItemHomepage item;
-
-  const ItemCard(this.item, {super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: item.color, // Use the specific color for this item
-      borderRadius: BorderRadius.circular(12),
-      child: InkWell(
-        onTap: () {
-          if (item.name == "Add Product") {
-            // Navigate to AddItemForm when "Add Product" is tapped
-            Navigator.of(context).push(
-              MaterialPageRoute(builder: (ctx) => AddItemForm()),
-            );
-          } else {
-            // Show a snackbar for other items
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(
-                  content: Text("You have pressed the ${item.name} button!")));
-          }
-        },
-        child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  item.icon,
-                  color: Colors.white,
-                  size: 30.0,
-                ),
-                const Padding(padding: EdgeInsets.all(3)),
-                Text(
-                  item.name,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}

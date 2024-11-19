@@ -1,6 +1,7 @@
+import 'package:bluebird_mobile/screens/login.dart';
 import 'package:flutter/material.dart';
-import 'package:bluebird_mobile/menu.dart';
-
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -9,17 +10,23 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-         colorScheme: ColorScheme.fromSwatch(
-       primarySwatch: Colors.lightBlue,
- ).copyWith(secondary: Colors.lightBlueAccent[400]),
+    return Provider(
+      create: (_) {
+        CookieRequest request = CookieRequest();
+        return request;
+      },
+      child: MaterialApp(
+        title: 'Bluebird Mobile',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSwatch(
+            primarySwatch: Colors.deepPurple,
+          ).copyWith(secondary: Colors.deepPurple[400]),
+        ),
+        home: LoginPage(),
       ),
-      home: MyHomePage(),
     );
   }
 }

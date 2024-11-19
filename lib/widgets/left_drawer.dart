@@ -1,7 +1,10 @@
+import 'package:bluebird_mobile/screens/additem_form.dart';
+import 'package:bluebird_mobile/screens/list_productentry.dart';
+import 'package:bluebird_mobile/screens/menu.dart';
 import 'package:flutter/material.dart';
-import 'package:bluebird_mobile/add_item_form.dart';
 
-class DrawerWidget extends StatelessWidget {
+class LeftDrawer extends StatelessWidget {
+  const LeftDrawer({super.key});  
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -24,7 +27,9 @@ class DrawerWidget extends StatelessWidget {
             leading: Icon(Icons.home),
             title: Text('Home'),
             onTap: () {
-              Navigator.of(context).pushReplacementNamed('/home');
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => MyHomePage()),
+              );
             },
           ),
           ListTile(
@@ -32,10 +37,21 @@ class DrawerWidget extends StatelessWidget {
             title: Text('Add Item'),
             onTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => AddItemForm()),
+                MaterialPageRoute(builder: (context) => ProductEntryFormPage()),
               );
             },
           ),
+            ListTile(
+            leading: const Icon(Icons.add_reaction_rounded),
+            title: const Text('Product List'),
+            onTap: () {
+                // Route to the mood page
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ProductEntryPage()),
+                );
+            },
+        ),
         ],
       ),
     );
